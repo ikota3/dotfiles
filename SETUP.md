@@ -10,7 +10,7 @@ cd dotfiles
 ## Github ssh
 
 ```sh
-ssh-keygen -t rsa -f ~/.ssh/id_rsa_github.pub
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github.pub
 cp .ssh/config ~/.ssh/config
 ```
 
