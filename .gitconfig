@@ -1,0 +1,9 @@
+[user]
+	email = 51883336+ikota3@users.noreply.github.com
+	name = ikota
+[alias]
+	st = status
+	cm = commit
+	ps = push
+	pl = pull
+	br = branch
