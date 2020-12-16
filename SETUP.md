@@ -26,3 +26,15 @@ After adding ssh key, run the command below.
 ```sh
 ssh -T github
 ```
+
+If you push the repo to github, and get the message below
+
+```sh
+$ git ps
+Warning: Permanently added the RSA host key for IP address 'xxx.xxx.xxx.xxx' to the list of known hosts.
+```
+
+Run this command
+```sh
+ssh-keygen -R github.com
+```
