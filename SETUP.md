@@ -10,7 +10,7 @@ cd dotfiles
 ## Github ssh
 
 ```sh
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github.pub
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa_github
 cp .ssh/config ~/.ssh/config
 ```
 
@@ -18,17 +18,23 @@ Go to https://github.com/settings/keys and add new SSH key.
 
 - Windows
 
-  ```sh
-  # Copy public key
-  cat ~/.ssh/id_rsa_github.pub.pub | clip
-  ```
+    ```sh
+    # Copy public key
+    cat ~/.ssh/id_rsa_github.pub | clip
+    ```
 
 - Linux
 
-  ```sh
-  # Copy public key
-  xclip -sel ~/.ssh/id_rsa_github.pub.pub
-  ```
+    ```bash
+    # Copy public key
+    xclip -sel ~/.ssh/id_rsa_github.pub
+    ```
+
+    Or...
+
+    ```bash
+    cat ~/.ssh/id_rsa_github.pub
+    ```
 
 After adding ssh key, run the command below.
 
