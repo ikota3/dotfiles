@@ -16,10 +16,19 @@ cp .ssh/config ~/.ssh/config
 
 Go to https://github.com/settings/keys and add new SSH key.
 
-```sh
-# Copy public key
-cat ~/.ssh/id_rsa_github.pub | clip
-```
+- Windows
+
+  ```sh
+  # Copy public key
+  cat ~/.ssh/id_rsa_github.pub.pub | clip
+  ```
+
+- Linux
+
+  ```sh
+  # Copy public key
+  xclip -sel ~/.ssh/id_rsa_github.pub.pub
+  ```
 
 After adding ssh key, run the command below.
 
