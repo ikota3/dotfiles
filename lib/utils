@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+set -Ceu
+
+# Check the command exists
+function has() {
+    type "$1" >/dev/null 2>&1
+}
+
+# Suspends the processing
+function pause() {
+    echo "$(tput setaf 5)Press any key to continue...$(tput sgr0)"
+    read -rsn 1
+    echo ""
+}
+
+# Ask user, yes or no
+function ask() {
+    local prompt_message
+    if [[ "${1:-}" = "" ]]; then
+        prompt_message="Are you sure to continue? (y/n): "
+    else
+        prompt_message="$1"
+    fi
+
+    local answer
+    while true; do
+        # echo "$(tput setaf 5)${prompt_message}$(tput sgr0)"
+        read -rp "$(tput setaf 5)${prompt_message}$(tput sgr0)" answer
+        # read -rn 1 answer
+        case "${answer}" in
+        [yY])
+            return 0
+            ;;
+        [nN])
+            return 1
+            ;;
+        esac
+    done
+}
+
+# Update packages
+# Note that this function is only executable for ubuntu only
+function update_package() {
+    local last_executed_ret_val
+    if [[ "$(uname)" = 'Linux' ]]; then
+
+        if has "apt-fast"; then
+            echo "$(tput setaf 2)Updating packages using \`apt-fast\`...$(tput sgr0)"
+            sudo apt-fast update -y && sudo apt-fast full-upgrade -y
+        elif has "apt-get"; then
+            echo "$(tput setaf 2)Updating packages using \`apt-get\`...$(tput sgr0)"
+            sudo apt-get update -y && sudo apt-get full-upgrade -y
+        else
+            echo "Cannot update package, because \`apt-get\` or \`apt-fast\` command is not valid."
+            exit 0
+        fi
+
+        last_executed_ret_val=$?
+        if [[ $last_executed_ret_val ]]; then
+            echo "$(tput setaf 2)Package updated successfully!$(tput sgr0)"
+        else
+            echo "$(tput setaf 1)Package update failed!$(tput sgr0)"
+        fi
+    fi
+}
