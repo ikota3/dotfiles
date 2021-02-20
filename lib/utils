@@ -2,6 +2,33 @@
 
 set -Ceu
 
+readonly NORMAL="$(tput sgr0)"
+readonly RED="$(tput setaf 1)"
+readonly GREEN="$(tput setaf 2)"
+readonly YELLOW="$(tput setaf 3)"
+
+# For debugging
+function debug() {
+    if [[ $DEBUG ]]; then
+        echo ">>> $*"
+    fi
+}
+
+# Colorize output to RED color
+function red_log() {
+    echo -e "${RED}$*${NORMAL}"
+}
+
+# Colorize output to GREEN color
+function green_log() {
+    echo -e "${GREEN}$*${NORMAL}"
+}
+
+# Colorize output to YELLOW color
+function yellow_log() {
+    echo -e "${YELLOW}$*${NORMAL}"
+}
+
 # Check the command exists
 function has() {
     type "$1" >/dev/null 2>&1
@@ -9,25 +36,18 @@ function has() {
 
 # Suspends the processing
 function pause() {
-    echo "$(tput setaf 5)Press any key to continue...$(tput sgr0)"
-    read -rsn 1
+    read -rs -p "$(green_log "Press any key to continue...")" -n 1
     echo ""
 }
 
 # Ask user, yes or no
+# Usage: if ask; then echo "Yes"; else echo "No"; fi
 function ask() {
-    local prompt_message
-    if [[ "${1:-}" = "" ]]; then
-        prompt_message="Are you sure to continue? (y/n): "
-    else
-        prompt_message="$1"
-    fi
+    local -r prompt_message="Are you sure to continue? (y/n): "
 
     local answer
     while true; do
-        # echo "$(tput setaf 5)${prompt_message}$(tput sgr0)"
-        read -rp "$(tput setaf 5)${prompt_message}$(tput sgr0)" answer
-        # read -rn 1 answer
+        read -rp "$(green_log "${prompt_message}")" answer
         case "${answer}" in
         [yY])
             return 0
@@ -42,25 +62,25 @@ function ask() {
 # Update packages
 # Note that this function is only executable for ubuntu only
 function update_package() {
-    local last_executed_ret_val
     if [[ "$(uname)" = 'Linux' ]]; then
 
         if has "apt-fast"; then
-            echo "$(tput setaf 2)Updating packages using \`apt-fast\`...$(tput sgr0)"
+            green_log "Updating packages using \`apt-fast\`..."
             sudo apt-fast update -y && sudo apt-fast full-upgrade -y
         elif has "apt-get"; then
-            echo "$(tput setaf 2)Updating packages using \`apt-get\`...$(tput sgr0)"
+            green_log "Updating packages using \`apt-get\`..."
             sudo apt-get update -y && sudo apt-get full-upgrade -y
         else
-            echo "Cannot update package, because \`apt-get\` or \`apt-fast\` command is not valid."
+            red_log "Cannot update package, because \`apt-get\` or \`apt-fast\` command was not available."
             exit 0
         fi
 
+        local last_executed_ret_val
         last_executed_ret_val=$?
         if [[ $last_executed_ret_val ]]; then
-            echo "$(tput setaf 2)Package updated successfully!$(tput sgr0)"
+            green_log "Package updated successfully!"
         else
-            echo "$(tput setaf 1)Package update failed!$(tput sgr0)"
+            red_log "Package update failed!"
         fi
     fi
 }
